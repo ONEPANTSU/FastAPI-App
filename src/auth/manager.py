@@ -4,7 +4,7 @@ from fastapi import Depends, Request
 from fastapi_users import BaseUserManager, IntegerIDMixin, exceptions, models, schemas
 
 from src.config import SECRET
-from src.database import User, get_user_db
+from src.database import get_user_db, User
 
 
 class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
