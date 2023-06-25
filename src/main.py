@@ -1,4 +1,7 @@
+import aioredis as aioredis
 from fastapi import FastAPI
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend
 from loguru import logger
 
 from src.auth.base_config import auth_backend, fastapi_users
@@ -15,7 +18,6 @@ logger.add(
 
 app = FastAPI(title="Trading App")
 
-
 app.include_router(
     fastapi_users.get_auth_router(auth_backend),
     prefix="/auth/jwt",
@@ -29,3 +31,9 @@ app.include_router(
 )
 
 app.include_router(router_operations)
+
+
+@app.on_event("startup")
+async def startup():
+    redis = aioredis.from_url("redis://localhost")
+    FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
