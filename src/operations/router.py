@@ -45,10 +45,10 @@ async def get_specific_operations(
         # return result.all()
     except Exception as e:
         return {
-                "status": "error",
-                "data": None,
-                "details": f"{e}",
-            }
+            "status": "error",
+            "data": None,
+            "details": f"{e}",
+        }
 
 
 @router.post("/")

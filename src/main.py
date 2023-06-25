@@ -6,7 +6,9 @@ from loguru import logger
 
 from src.auth.base_config import auth_backend, fastapi_users
 from src.auth.schemas import UserCreate, UserRead
+from src.config import CACHE_HOST, CACHE_PORT
 from src.operations.router import router as router_operations
+from src.tasks.router import router as router_report
 
 logger.add(
     "../app.log",
@@ -31,9 +33,10 @@ app.include_router(
 )
 
 app.include_router(router_operations)
+app.include_router(router_report)
 
 
 @app.on_event("startup")
 async def startup():
-    redis = aioredis.from_url("redis://localhost")
+    redis = aioredis.from_url(f"redis://{CACHE_HOST}:{CACHE_PORT}")
     FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
